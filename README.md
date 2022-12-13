@@ -22,3 +22,6 @@ e.g. If the origin is [X0 Y0], sending [G0 X10 Y10] followed by [G92 X10 Y10] wi
 - G21 - sets movement to metric
 - G28 - Returns machine to zero point
 - G4 - Select working datum
+
+## Known Errors
+- During real world testing, an error will generally lead to the JVM crashing.
