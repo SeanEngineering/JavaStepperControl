@@ -36,21 +36,22 @@ public class PositionService {
 				System.out.println("Available port: "+s);
 				port = s;
 			}
-			int BaudRate = 115200;
+			int BaudRate = 9600;
 			NRSerialPort serial = new NRSerialPort(port, BaudRate);
 			serial.connect();
 			DataInputStream ins = new DataInputStream(serial.getInputStream());
 			DataOutputStream outs = new DataOutputStream(serial.getOutputStream());
 			try{
 				//while(ins.available()==0 && !Thread.interrupted());// wait for a byte
-				while(!Thread.interrupted()) {// read all bytes
-					if(ins.available()>0) {
-						char b = ins.readChar();
-						//outs.write((byte)b);
-						System.out.print(b);
-					}
-			    		Thread.sleep(5);
-				}
+				outs.write(encodeToByte("\r\n\r\n"));
+				outs.write(encodeToByte("G90 G94\n"));
+				outs.write(encodeToByte("G21\n"));
+				outs.write(encodeToByte("G28 G91 Z0\n"));
+				outs.write(encodeToByte("G90\n"));
+				outs.write(encodeToByte("T1\n"));
+				outs.write(encodeToByte("S22500 M3\n"));
+				outs.write(encodeToByte("G54\n"));
+				outs.write(encodeToByte("G0 X0 Y0\n"));
 			}catch(Exception ex){
 				ex.printStackTrace();
 			}
@@ -104,7 +105,7 @@ public class PositionService {
 			System.out.println("Available port: "+s);
 			port = s;
 		}
-		int BaudRate = 115200;
+		int BaudRate = 9600;
 		NRSerialPort serial = new NRSerialPort(port, BaudRate);
 		serial.connect();
 		DataInputStream ins = new DataInputStream(serial.getInputStream());
@@ -119,7 +120,7 @@ public class PositionService {
 			outs.write(encodeToByte("T1\n"));
 			outs.write(encodeToByte("S22500 M3\n"));
 			outs.write(encodeToByte("G54\n"));
-			outs.write(encodeToByte("G0 X0 Y0\n"));
+			outs.write(encodeToByte(String.format("G0 X%.2f Y%.2f\n", maybePosition.get().getX(), maybePosition.get().getY())));
 			outs.write(encodeToByte(textString));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
